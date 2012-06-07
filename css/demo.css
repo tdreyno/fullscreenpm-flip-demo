@@ -1,0 +1,75 @@
+body {
+  margin: 0;
+  padding: 0;
+  xbackground: url("../img/small.png") no-repeat;
+}
+
+#demo {
+  width: 2880px;
+  -webkit-transform-origin: 0 0;
+}
+
+#demo_container {
+  width: 2880px;
+  position: relative;
+  -webkit-transform-style: preserve-3d;
+}
+
+.demo_item {
+  position: absolute;
+  top: 0;
+  left: 0;
+/*  -webkit-transition: -webkit-transform 800ms ease-in-out;*/
+/*  -webkit-transform-origin: 50% 50%;*/
+  -webkit-perspective: 400;
+  -webkit-transform-style: preserve-3d;
+}
+
+.bottomLeft,
+.bottomRight,
+.topLeft,
+.topRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+/*  -webkit-transition: -webkit-transform 800ms ease-in-out;*/
+}
+
+.bottomLeft,
+.topLeft {
+  left: 0;
+  background-position: 0 0;
+  -webkit-transform-origin: 100% 50%;
+}
+
+.bottomRight,
+.topRight {
+  right: 0;
+  -webkit-transform-origin: 0 50%;
+}
+
+.bottomLeft,
+.bottomRight {
+  background-repeat: no-repeat;
+  -webkit-backface-visibility: hidden;
+}
+
+.topLeft,
+.topRight {
+  background-repeat: no-repeat;
+  -webkit-backface-visibility: hidden;
+}
+
+.bottomLeft {
+  -webkit-transform: rotateY(180deg);
+}
+
+.demo_item.is-flipped {
+  
+}
+  .demo_item.is-flipped .bottomLeft {
+    -webkit-transform: rotateY(0deg);
+  }
+  .demo_item.is-flipped .topRight {
+    -webkit-transform: rotateY(-180deg);
+  }

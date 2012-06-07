@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <script type="text/x-handlebars" data-template-name="demo_item">
+      <div class="bottomRight"></div>
+      <div class="topLeft"></div>
+      <div class="topRight"></div>
+      <div class="bottomLeft"></div>
+    </script>
+    <link href="css/demo.css" rel="stylesheet">
+    
+    <script src="js/lib/raf.js"></script>
+    <script src="js/lib/Tween.js"></script>
+    <script src="js/lib/jquery.js"></script>
+    <script>
+      // Opt-in to Ember 1.0's new defaults
+      ENV = {
+        CP_DEFAULT_CACHEABLE:   true,
+        VIEW_PRESERVES_CONTEXT: true,
+        USE_ACCESSORS:          false // For now, let's avoid these guys
+      }
+    </script>
+    <script src="js/lib/ember.js"></script>
+  </head>
+  <body>
+    <img id="large" src="img/small.png" style="display: none">
+    <div id="demo">
+      <div id="demo_container">
+      </div>
+    </div>
+    <script src="js/compiled/demo.js"></script>
+    <script>
+      Em.run.later(function() {
+        // Fill in items
+        for (var i=0; i < (9 * 9); i++) {
+          var reversed = false;
+
+
+          if (i <= 8) {
+            reversed = true;
+          }
+
+          if ((i >= 18) && (i <= 26)) {
+            reversed = true;
+          }
+
+          if ((i >= 36) && (i <= 40)) {
+            reversed = true;
+          }
+
+          if ((i >= 63) && (i <= 71)) {
+            reversed = true;
+          }
+
+          if ((i >= 45) && (i <= 53)) {
+            reversed = true;
+          }
+
+          var item = Demo.FuelItem.create({
+            col: ((i % 9) + 1),
+            row: (Math.floor(i / 9) + 1),
+            reversed: reversed
+          });
+
+          item.appendTo($("#demo_container"));
+
+          Demo.demoItems.pushObject(item);
+        }
+
+        // Start flipper
+        // Em.run.next(Demo.demoItems, "randomlyFlip");
+      }, 1000);
+      
+      window.go = function() {
+        var top = [
+           0,  1,  2,  3,  4,  5,  6,  7,  8,
+          17, 16, 15, 14, 13, 12, 11, 10,  9,
+          18, 19, 20, 21, 22, 23, 24, 25, 26,
+          35, 34, 33, 32, 31, 30, 29, 28, 27,
+          36, 37, 38, 39, 40
+        ];
+
+        var bottom = [
+          80, 79, 78, 77, 76, 75, 74, 73, 72,
+          63, 64, 65, 66, 67, 68, 69, 70, 71,
+          62, 61, 60, 59, 58, 57, 56, 55, 54,
+          45, 46, 47, 48, 49, 50, 51, 52, 53,
+          44, 43, 42, 41
+        ];
+
+        for (var i = 0, l = top.length; i < l; i++) {
+          (function(view, idx) {
+            var t = new TWEEN.Tween({ pos: 0 });
+            t.to({ pos: 1 }, 1000);
+            t.onUpdate(function() {
+              view.setRotation(this.pos, view.get("reversed"));
+            });
+            t.easing(TWEEN.Easing.Quadratic.InOut);
+            t.delay(idx * 250);
+            t.start();
+          })(Demo.demoItems.objectAt(top[i]), i);
+        }
+
+        for (var j = 0, l2 = bottom.length; j < l2; j++) {
+          (function(view, idx) {
+            var t = new TWEEN.Tween({ pos: 0 });
+            t.to({ pos: 1 }, 1000);
+            t.onUpdate(function() {
+              view.setRotation(this.pos, view.get("reversed"));
+            });
+            t.easing(TWEEN.Easing.Quadratic.InOut);
+            t.delay(idx * 250);
+            t.start();
+          })(Demo.demoItems.objectAt(bottom[j]), j);
+        }
+      };
+
+      document.body.addEventListener("dblclick", window.go);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <script type="text/x-handlebars" data-template-name="demo_item">
+      <div class="bottomRight"></div>
+      <div class="topLeft"></div>
+      <div class="topRight"></div>
+      <div class="bottomLeft"></div>
+    </script>
+    <link href="css/demo.css" rel="stylesheet">
+    <style>
+      body { background: #333; }
+      .demo_item {
+        -webkit-perspective: 1600; }
+    </style>
+    
+    <script src="js/lib/raf.js"></script>
+    <script src="js/lib/Tween.js"></script>
+    <script src="js/lib/jquery.js"></script>
+    <script>
+      // Opt-in to Ember 1.0's new defaults
+      ENV = {
+        CP_DEFAULT_CACHEABLE:   true,
+        VIEW_PRESERVES_CONTEXT: true,
+        USE_ACCESSORS:          false // For now, let's avoid these guys
+      }
+    </script>
+    <script src="js/lib/ember.js"></script>
+  </head>
+  <body>
+    <img id="large" src="img/small.png" style="display: none">
+    <div id="demo" style="width: 620px; height: 620px; margin: 100px auto;">
+      <div id="demo_container" style="width: 620px; height: 620px;">
+      </div>
+    </div>
+    <script src="js/compiled/demo.js"></script>
+    <script>
+      var view = Demo.FuelItem2.create({
+        width: 620,
+        height: 620,
+      });
+
+      view.appendTo($("#demo_container"));
+      
+      var direction = true;
+      
+      window.go = function() {
+        var t = new TWEEN.Tween({ pos: 0 });
+        t.to({ pos: 1 }, 3000);
+        t.onUpdate(function() {
+          view.setRotation(this.pos, direction);
+        });
+        t.easing(TWEEN.Easing.Quadratic.InOut);
+        t.start();
+        
+        direction = !direction;
+      };
+
+      document.body.addEventListener("dblclick", window.go);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+require "json"
+require "rake-pipeline-web-filters"
+
+class KickOff < Rake::Pipeline::Filter
+  def generate_output(inputs, output)
+    inputs.each do |input|
+      output.write input.read
+      output.write ';minispade.require("/js/demo/base.js");'
+    end
+  end
+end
+
+input "js" do
+  output "js/compiled"
+  
+  # Prod compile?
+  # if false
+  #   match "demo/**/*.js" do
+  #     filter Rake::Pipeline::Web::Filters::NeuterFilter, "fuelstream.js", {
+  #       :path_transform => proc { |path, input| path.sub("/js", "") },
+  #       :additional_dependencies => proc { |input| 
+  #         Dir[File.join(File.dirname(__FILE__), "js", "**", "*.js")]
+  #       }
+  #     }
+  #   end
+  # else
+    match "demo/**/*.js" do
+      filter Rake::Pipeline::Web::Filters::MinispadeFilter, {
+        :rewrite_requires => true,
+        :string => false
+      }
+    end
+    
+    filter Rake::Pipeline::OrderingConcatFilter, ["minispade.js"], "demo.js"
+    
+    filter KickOff
+
+    # uglify
+  # end
+end
